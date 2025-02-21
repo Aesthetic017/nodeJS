@@ -15,3 +15,12 @@ console.log(result)
 
 //appending to file
 fs.appendFileSync("./test.txt",new Date().toLocaleString());
+
+//copying file 
+// fs.cpSync("./test.txt","./copy.txt")
+//to delete file 
+// fs.unlinkSync("./copy.txt")
+//to get stats of file
+console.log (fs.statSync("./test.txt"));
+//to create folder
+// fs.mkdirSync("my-docs");
