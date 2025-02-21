@@ -12,3 +12,6 @@ console.log(result)
 // const res = fs.readFileSync("./contacts.txt","utf-8",(err,result)=>{
 //     console.log(res)
 // });
+
+//appending to file
+fs.appendFileSync("./test.txt",new Date().toLocaleString());
