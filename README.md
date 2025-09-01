@@ -1,8 +1,5 @@
 # Node.js Learning Journey
 
-## Overview
-This repository is dedicated to my journey in learning, improving, and exploring Node.js.
-
 🚀 Features Implemented
 
 Node.js Fundamentals – Core modules, package management (npm), environment setup.
