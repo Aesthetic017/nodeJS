@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat APP</title>
+    <style>
+      /* Global Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+      }
+
+      .chat-container {
+        background: #fff;
+        width: 400px;
+        height: 600px;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        animation: fadeIn 0.8s ease-in-out;
+      }
+
+      header {
+        background: #2575fc;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+
+      #messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      #messages p {
+        background: #f1f1f1;
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 70%;
+        animation: pop 0.3s ease-in-out;
+      }
+
+      /* Example: differentiate user messages (if you extend later) */
+      #messages p.user {
+        background: #2575fc;
+        color: white;
+        align-self: flex-end;
+      }
+
+      .input-area {
+        display: flex;
+        padding: 15px;
+        background: #fafafa;
+        border-top: 1px solid #eee;
+      }
+
+      #message {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        outline: none;
+        font-size: 1rem;
+        transition: 0.3s;
+      }
+
+      #message:focus {
+        border-color: #2575fc;
+        box-shadow: 0 0 8px rgba(37, 117, 252, 0.4);
+      }
+
+      #sendBtn {
+        margin-left: 10px;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 25px;
+        background: #2575fc;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      #sendBtn:hover {
+        background: #6a11cb;
+        transform: scale(1.05);
+      }
+
+      /* Scrollbar Styling */
+      #messages::-webkit-scrollbar {
+        width: 8px;
+      }
+      #messages::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      #messages::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <header>💬 Chat App</header>
+
+      <div id="messages"></div>
+
+      <div class="input-area">
+        <input type="text" id="message" placeholder="Type a message..." />
+        <button id="sendBtn">Send</button>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const sendBtn = document.getElementById("sendBtn");
+      const messageInput = document.getElementById("message");
+      const allMessages = document.getElementById("messages");
+
+      socket.on("message", (message) => {
+        const p = document.createElement("p");
+        p.innerText = message;
+        p.classList.add("user"); // you can toggle class based on sender
+        allMessages.appendChild(p);
+        allMessages.scrollTop = allMessages.scrollHeight; // auto scroll
+      });
+
+      sendBtn.addEventListener("click", (e) => {
+        const message = messageInput.value.trim();
+        if (!message) return;
+        socket.emit("user-message", message);
+        messageInput.value = "";
+      });
+
+      messageInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendBtn.click();
+      });
+    </script>
+  </body>
+</html>
